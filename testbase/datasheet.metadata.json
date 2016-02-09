@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"testbase.datasheet"},{"v":1,"unique":true,"key":{"userId":1.0,"datasheetTitle":1.0},"name":"userId_1_datasheetTitle_1","ns":"testbase.datasheet"}]}
