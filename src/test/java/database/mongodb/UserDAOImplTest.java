@@ -1,5 +1,6 @@
 package database.mongodb;
 
+import database.DAO.DBException;
 import database.DAO.UserDAO;
 import domain.User;
 import domain.UserType;
@@ -12,15 +13,17 @@ import static org.junit.Assert.*;
  * Created by Radchuk on 08.02.2016.
  */
 public class UserDAOImplTest {
-    private UserDAO userDAO = new UserDAOImpl();
+
 
     @Before
-    public void cleanDB(){
+    public void cleanDB() throws DBException {
         DBCleaner.cleanDB();
     }
 
     @Test
     public void testGetUserByID() throws Exception {
+
+        UserDAO userDAO = new UserDAOImpl();
         User user = new User("test user", "test password", "test_salt", "USER");
         user =  userDAO.createUser(user);
         User userFromDB = userDAO.getUserByID(user.getId());
@@ -35,6 +38,7 @@ public class UserDAOImplTest {
 
     @Test
     public void testCreateUser() throws Exception {
+        UserDAO userDAO = new UserDAOImpl();
         User user = new User("test user", "test password", "test_salt", "USER");
         User createdUser =  userDAO.createUser(user);
         assertEquals(createdUser.getUserType(), user.getUserType());
@@ -46,7 +50,8 @@ public class UserDAOImplTest {
     }
 
     @Test
-    public void testDeleteUser()  {
+    public void testDeleteUser() throws DBException {
+        UserDAO userDAO = new UserDAOImpl();
         User user = new User("test user", "test password", "test_salt", "USER");
         User createdUser =  userDAO.createUser(user);
         assertNotEquals(createdUser.getId(),"");
@@ -57,7 +62,8 @@ public class UserDAOImplTest {
     }
 
     @Test
-    public void testDeleteUserById()  {
+    public void testDeleteUserById() throws DBException {
+        UserDAO userDAO = new UserDAOImpl();
         User user = new User("test user", "test password", "test_salt", "USER");
         User createdUser =  userDAO.createUser(user);
         assertNotEquals(createdUser.getId(),"");
@@ -67,7 +73,8 @@ public class UserDAOImplTest {
     }
 
     @Test
-    public void testUpdateUser()  {
+    public void testUpdateUser() throws DBException {
+        UserDAO userDAO = new UserDAOImpl();
         User user = new User("test user", "test password", "test_salt", "USER");
         user =  userDAO.createUser(user);
         user.setUserType(UserType.ADMIN);

@@ -1,5 +1,6 @@
 package database.mongodb;
 
+import database.DAO.DBException;
 import database.DAO.DataSheetDAO;
 import database.DAO.UserDAO;
 import database.DAO.WidgetDAO;
@@ -15,18 +16,19 @@ import static org.junit.Assert.*;
  * Created by Radchuk on 08.02.2016.
  */
 public class WidgetDAOImplTest {
-    private UserDAO userDAO = new UserDAOImpl();
-    private DataSheetDAO dataSheetDAO = new DataSheetDAOImpl();
-    private WidgetDAO widgetDAO = new WidgetDAOImpl();
+
 
     @Before
-    public void cleanDb(){
+    public void cleanDb() throws DBException {
         DBCleaner.cleanDB();
     }
 
 
     @Test
     public void testCreateWidget() throws Exception {
+        UserDAO userDAO = new UserDAOImpl();
+        DataSheetDAO dataSheetDAO = new DataSheetDAOImpl();
+        WidgetDAO widgetDAO = new WidgetDAOImpl();
         User user = new User("test user","test password","test salt","USER");
         user = userDAO.createUser(user);
         DataSheet dataSheet = new DataSheet(user.getId(),"test datasheet title");
@@ -41,6 +43,9 @@ public class WidgetDAOImplTest {
 
     @Test
     public void testGetWidgetById() throws Exception {
+        UserDAO userDAO = new UserDAOImpl();
+        DataSheetDAO dataSheetDAO = new DataSheetDAOImpl();
+        WidgetDAO widgetDAO = new WidgetDAOImpl();
         User user = new User("test user","test password","test salt","USER");
         user = userDAO.createUser(user);
         DataSheet dataSheet = new DataSheet(user.getId(),"test datasheet title");
@@ -55,6 +60,9 @@ public class WidgetDAOImplTest {
 
     @Test
     public void testUpdateWidget() throws Exception {
+        UserDAO userDAO = new UserDAOImpl();
+        DataSheetDAO dataSheetDAO = new DataSheetDAOImpl();
+        WidgetDAO widgetDAO = new WidgetDAOImpl();
         User user = new User("test user","test password","test salt","USER");
         user = userDAO.createUser(user);
         DataSheet dataSheet = new DataSheet(user.getId(),"test datasheet title");
@@ -71,6 +79,9 @@ public class WidgetDAOImplTest {
 
     @Test
     public void testDeleteWidget() throws Exception {
+        UserDAO userDAO = new UserDAOImpl();
+        DataSheetDAO dataSheetDAO = new DataSheetDAOImpl();
+        WidgetDAO widgetDAO = new WidgetDAOImpl();
         User user = new User("test user","test password","test salt","USER");
         user = userDAO.createUser(user);
         DataSheet dataSheet = new DataSheet(user.getId(),"test datasheet title");

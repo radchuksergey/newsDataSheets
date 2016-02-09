@@ -1,6 +1,7 @@
 package database.mongodb;
 
 import com.mongodb.MongoWriteException;
+import database.DAO.DBException;
 import database.DAO.DataSheetDAO;
 import database.DAO.UserDAO;
 import domain.DataSheet;
@@ -18,19 +19,20 @@ import static org.junit.Assert.*;
  * Created by Radchuk on 08.02.2016.
  */
 public class DataSheetDAOImplTest {
-    private UserDAO userDAO = new UserDAOImpl();
-    private DataSheetDAO dataSheetDAO = new DataSheetDAOImpl();
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Before
-    public void cleanDB(){
+    public void cleanDB() throws DBException {
         DBCleaner.cleanDB();
     }
 
     @Test
-    public void testCreateDataSheet(){
+    public void testCreateDataSheet() throws DBException {
+        UserDAO userDAO = new UserDAOImpl();
+        DataSheetDAO dataSheetDAO = new DataSheetDAOImpl();
+
         User user = new User("test_user","test password","test salt","USER");
         user  = userDAO.createUser(user);
         DataSheet dataSheet = new DataSheet(user.getId(),"test datasheet title");
@@ -41,7 +43,9 @@ public class DataSheetDAOImplTest {
     }
 
     @Test
-    public void testGetDataSheetsByUser(){
+    public void testGetDataSheetsByUser() throws DBException {
+        UserDAO userDAO = new UserDAOImpl();
+        DataSheetDAO dataSheetDAO = new DataSheetDAOImpl();
         User user = new User("test_user","test password","test salt","USER");
         user  = userDAO.createUser(user);
         DataSheet dataSheet = new DataSheet(user.getId()," first test datasheet title");
@@ -61,7 +65,9 @@ public class DataSheetDAOImplTest {
 
 
     @Test
-    public void testGetdataSheetById(){
+    public void testGetdataSheetById() throws DBException {
+        UserDAO userDAO = new UserDAOImpl();
+        DataSheetDAO dataSheetDAO = new DataSheetDAOImpl();
         User user = new User("test_user","test password","test salt","USER");
         user  = userDAO.createUser(user);
         DataSheet dataSheet = new DataSheet(user.getId()," first test datasheet title");
@@ -73,7 +79,9 @@ public class DataSheetDAOImplTest {
     }
 
     @Test
-    public void testCreateDataSheet_Twin(){
+    public void testCreateDataSheet_Twin() throws DBException {
+        UserDAO userDAO = new UserDAOImpl();
+        DataSheetDAO dataSheetDAO = new DataSheetDAOImpl();
         thrown.expect(MongoWriteException.class);
         User user = new User("test_user","test password","test salt","USER");
         user  = userDAO.createUser(user);
@@ -84,7 +92,9 @@ public class DataSheetDAOImplTest {
     }
 
     @Test
-    public void testDeleteDataSheet(){
+    public void testDeleteDataSheet() throws DBException {
+        UserDAO userDAO = new UserDAOImpl();
+        DataSheetDAO dataSheetDAO = new DataSheetDAOImpl();
         User user = new User("test_user","test password","test salt","USER");
         user  = userDAO.createUser(user);
         DataSheet dataSheet = new DataSheet(user.getId()," first test datasheet title");
@@ -100,7 +110,9 @@ public class DataSheetDAOImplTest {
     }
 
     @Test
-    public void testUpdateDataSheet(){
+    public void testUpdateDataSheet() throws DBException {
+        UserDAO userDAO = new UserDAOImpl();
+        DataSheetDAO dataSheetDAO = new DataSheetDAOImpl();
         User user = new User("test_user","test password","test salt","USER");
         user  = userDAO.createUser(user);
         DataSheet dataSheet = new DataSheet(user.getId()," first test datasheet title");
