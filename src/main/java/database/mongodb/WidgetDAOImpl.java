@@ -1,5 +1,6 @@
 package database.mongodb;
 
+import database.DAO.DBException;
 import database.DAO.WidgetDAO;
 import com.mongodb.client.FindIterable;
 import domain.DataSheet;
@@ -15,10 +16,15 @@ import java.util.List;
  */
 public class WidgetDAOImpl implements WidgetDAO {
     private final String COLLECTION_NAME = "widget";
-    private DatabaseConnector databaseConnector = new DatabaseConnector();
+    private DatabaseConnector databaseConnector ;
+
+    public WidgetDAOImpl() throws DBException {
+        databaseConnector = new DatabaseConnector();
+    }
+
     @Override
 
-    public Widget createWidget(Widget widget) {
+    public Widget createWidget(Widget widget) throws DBException {
         Document newWidgetRecord = new Document();
         newWidgetRecord.put("datasheetId",widget.getDataSheetId());
         newWidgetRecord.put("content",widget.getContent());
@@ -33,7 +39,7 @@ public class WidgetDAOImpl implements WidgetDAO {
     }
 
     @Override
-    public Widget getWidgetById(String widgetId) {
+    public Widget getWidgetById(String widgetId) throws DBException {
         Document whereQuery = new Document("_id", new ObjectId(widgetId));
         Document resultDoc = (Document) databaseConnector.getCollectionByName(COLLECTION_NAME).find(whereQuery).first();
         if (resultDoc != null) return  new Widget(resultDoc.get("_id").toString(),
@@ -44,7 +50,7 @@ public class WidgetDAOImpl implements WidgetDAO {
     }
 
     @Override
-    public void updateWidget(Widget widget) {
+    public void updateWidget(Widget widget) throws DBException {
         Document whereQuery = new Document("_id", new ObjectId(widget.getId()));
         Document setForUpdate = new Document();
         setForUpdate.put("sequenceNumber", widget.getSequenceNumber());
@@ -54,14 +60,14 @@ public class WidgetDAOImpl implements WidgetDAO {
     }
 
     @Override
-    public void deleteWidget(Widget widget) {
+    public void deleteWidget(Widget widget) throws DBException {
         Document whereQuery = new Document("_id", new ObjectId(widget.getId()));
         databaseConnector.getCollectionByName(COLLECTION_NAME).deleteOne(whereQuery);
 
     }
 
     @Override
-    public List<Widget> getWidgetsListByDataSheet(DataSheet dataSheet) {
+    public List<Widget> getWidgetsListByDataSheet(DataSheet dataSheet) throws DBException {
         Document whereQuery = new Document("datasheetId", new ObjectId(dataSheet.getId()));
         List<Widget> widgets = new ArrayList<Widget>();
         FindIterable<Document> findResult = databaseConnector.getCollectionByName(COLLECTION_NAME).find(whereQuery);

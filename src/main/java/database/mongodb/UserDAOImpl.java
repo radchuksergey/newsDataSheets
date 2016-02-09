@@ -1,5 +1,6 @@
 package database.mongodb;
 
+import database.DAO.DBException;
 import database.DAO.UserDAO;
 import com.mongodb.client.MongoCollection;
 import domain.User;
@@ -11,10 +12,14 @@ import org.bson.types.ObjectId;
  */
 public class UserDAOImpl implements UserDAO {
     private static final String COLLECTION_NAME = "user";
-    private DatabaseConnector databaseConnector = new DatabaseConnector();
+    private DatabaseConnector databaseConnector;
+
+    public UserDAOImpl() throws DBException {
+        this.databaseConnector = new DatabaseConnector();
+    }
 
     @Override
-    public User getUserByID(String userID) {
+    public User getUserByID(String userID) throws DBException {
         MongoCollection collection  = databaseConnector.getCollectionByName(COLLECTION_NAME);
         Document recordFromDb = (Document) collection.find(new Document("_id", new ObjectId(userID))).first();
         if (recordFromDb != null) {
@@ -24,7 +29,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User createUser(User user) {
+    public User createUser(User user) throws DBException {
         MongoCollection collection = databaseConnector.getCollectionByName(COLLECTION_NAME);
         Document document = new Document();
         document.put("userName",user.getUserName());
@@ -38,18 +43,18 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void deleteUser(String userID) {
+    public void deleteUser(String userID) throws DBException {
         MongoCollection collection = databaseConnector.getCollectionByName(COLLECTION_NAME);
         collection.findOneAndDelete(new Document("_id", new ObjectId(userID)));
     }
 
     @Override
-    public void deleteUser(User user) {
+    public void deleteUser(User user) throws DBException {
         deleteUser(user.getId());
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(User user) throws DBException {
         MongoCollection collection = databaseConnector.getCollectionByName(COLLECTION_NAME);
         Document setForUpdate = new Document();
         setForUpdate.put("encryptedPassword",user.getEncryptedPassword());

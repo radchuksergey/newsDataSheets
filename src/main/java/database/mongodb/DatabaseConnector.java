@@ -2,9 +2,11 @@ package database.mongodb;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
+import com.mongodb.MongoException;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import database.DAO.DBException;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -38,25 +40,29 @@ public class DatabaseConnector {
         }
     }
 
-    private void setDataBase(){
+    private void setDataBase() throws DBException {
         ServerAddress serverAddress = new ServerAddress(dbHost,Integer.valueOf(dbPort));
         MongoCredential credential = MongoCredential.createCredential(dbUser,dbName,dbPwd.toCharArray());
-        MongoClient mongoClient = new MongoClient(serverAddress, Arrays.asList(credential));
-        this.database = mongoClient.getDatabase(dbName);
+        try {
+            MongoClient mongoClient = new MongoClient(serverAddress, Arrays.asList(credential));
+            this.database = mongoClient.getDatabase(dbName);
+        } catch (MongoException e) {
+            throw new DBException(e.getMessage());
+        }
 
     }
 
-    public MongoCollection getCollectionByName(String collectionName){
+    public MongoCollection getCollectionByName(String collectionName) throws DBException {
         boolean found = false;
         for (String name : database.listCollectionNames()){
             found = name.equals(collectionName);
             if (found) break;
         }
         if(found) return database.getCollection(collectionName);
-        else throw new IllegalArgumentException(collectionName + " doesn't exist into database!");
+        else throw new DBException(collectionName + " doesn't exist into database!");
     }
 
-    public DatabaseConnector() {
+    public DatabaseConnector() throws DBException {
         initDatabaseConnectionProperties();
         setDataBase();
     }

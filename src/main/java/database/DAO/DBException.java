@@ -1,4 +1,4 @@
-package database.mongodb;
+package database.DAO;
 
 /**
  * Created by sergey on 31.01.2016.

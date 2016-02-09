@@ -1,5 +1,6 @@
 package database.mongodb;
 
+import database.DAO.DBException;
 import database.DAO.DataSheetDAO;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.FindIterable;
@@ -18,10 +19,15 @@ import java.util.List;
  */
 public class DataSheetDAOImpl implements DataSheetDAO{
     private final String COLLECTION_NAME = "datasheet";
-    private DatabaseConnector databaseConnector = new DatabaseConnector();
+    private DatabaseConnector databaseConnector ;
+
+
+    public DataSheetDAOImpl() throws DBException {
+        databaseConnector = new DatabaseConnector();
+    }
 
     @Override
-    public DataSheet getDatasheetById(String id) throws IllegalArgumentException{
+    public DataSheet getDatasheetById(String id) throws IllegalArgumentException, DBException {
         Document whereQuery = new Document("_id", new ObjectId(id));
         Document resultRecord = (Document) databaseConnector.getCollectionByName(COLLECTION_NAME).find(whereQuery).first();
         if (resultRecord != null) return  new DataSheet(resultRecord.get("_id").toString(), resultRecord.getString("userId"), resultRecord.getString("datasheetTitle"));
@@ -29,7 +35,7 @@ public class DataSheetDAOImpl implements DataSheetDAO{
     }
 
     @Override
-    public DataSheet createDataSheet(DataSheet dataSheet) throws MongoWriteException,IllegalArgumentException {
+    public DataSheet createDataSheet(DataSheet dataSheet) throws  DBException {
         Document inserQuery = new Document();
         inserQuery.put("userId",dataSheet.getUserId());
         inserQuery.put("datasheetTitle",dataSheet.getDataSheetTitle());
@@ -40,21 +46,21 @@ public class DataSheetDAOImpl implements DataSheetDAO{
     }
 
     @Override
-    public void deleteDataSheet(DataSheet dataSheet)throws MongoWriteException,IllegalArgumentException {
+    public void deleteDataSheet(DataSheet dataSheet) throws DBException {
         Document whereQuery = new Document("_id", new ObjectId(dataSheet.getId()));
         databaseConnector.getCollectionByName(COLLECTION_NAME).deleteOne(whereQuery);
 
     }
 
     @Override
-    public void updateDataSheet(DataSheet dataSheet)throws MongoWriteException,IllegalArgumentException {
+    public void updateDataSheet(DataSheet dataSheet) throws  DBException {
         Document whereQuery = new Document("_id", new ObjectId(dataSheet.getId()));
         Document setForUpdate = new Document("datasheetTitle",dataSheet.getDataSheetTitle());
         databaseConnector.getCollectionByName(COLLECTION_NAME).updateOne(whereQuery, new Document("$set",setForUpdate));
     }
 
     @Override
-    public List<DataSheet> getDataSheetsByUser(User user) {
+    public List<DataSheet> getDataSheetsByUser(User user) throws DBException {
 
         List<DataSheet> dataSheets = new ArrayList<DataSheet>();
         Document whereQuery = new Document("userId", user.getId());
